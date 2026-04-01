@@ -1,0 +1,17 @@
+[
+    {
+        "alert_name":"Suspicious Email",
+        "sender": "abc@paypa1.com",
+        "recipient": "xyz@company.com",
+        "subject":"Verify your account",
+        "timestamp": "20226-03-25T10:00:00",
+        "spf_result":"fail",
+        "urls":["https://paypa1-login.com"],
+        "attachment":
+        {
+            "exists" :true,
+            "name" :"invoice.pdf",
+            "hash": "abc123xyz"
+        }
+    }
+]
