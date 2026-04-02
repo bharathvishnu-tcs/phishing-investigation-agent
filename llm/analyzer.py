@@ -2,16 +2,27 @@ from llm.ollama_client import query_ollama
 
 def generate_reasoning(case):
     prompt = f"""
-        Explain why this alert is classified as {case['decision']['classification']}
+        You are a SOC analyst.
 
-        Provide step by step reasoning based on 
-            - Header Analysis
-            - URL Analysis
-            - Spoofing
-            - Attachment Analysis
-            - User Interaction
-            - Identity compromise
-    """
+        STRICTLY analyze ONLY the given data.
+
+        Do NOT assume anything outside the input.
+
+        Data:
+        Sender: {case['email']['sender_email']}
+        Subject: {case['email']['subject']}
+        URL Analysis: {case['url_analysis']}
+        Spoofing: {case['spoofing']}
+        Header: {case['header_analysis']}
+        User Interaction: {case['user_interaction']}
+        Identity: {case['identity']}
+
+        Explain step-by-step why this is classified as:
+        {case['decision']['classification']}
+
+        Only describe facts present in data.
+        Do not exaggerate or assume.
+        """
 
     reasoning = query_ollama(prompt)
 

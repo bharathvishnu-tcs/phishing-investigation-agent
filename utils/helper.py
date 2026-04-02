@@ -1,7 +1,7 @@
 import tldextract
 import random
 
-SUSPICIOUS_KEYWORDS = ["login", "verify", "secure", "update", "account"]
+from app.config import * 
 
 def extract_domain(url):
     ext = tldextract.extract(url)

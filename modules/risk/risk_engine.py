@@ -1,29 +1,30 @@
+from app.config import *
 def calculate_risk(case):
     score = 0
     reasons = []
 
     if any(u.get("is_malicious") for u in case.get("url_analysis",[])):
-        score +=30
+        score += RISK_URL
         reasons.append("Malicious URL detected")
 
     if case.get("spoofing",{}).get("is_spoofed"):
-        score+=20
+        score+= RISK_SPOOFING
         reasons.append("Spoofed sender detected")
     
     if case.get("header_analysis",{}).get("is_suspicious"):
-        score+=20
+        score+=RISK_HEADER
         reasons.append("Email Authentication failed")
 
     if any(u.get("is_new_domain") for u in case.get("enrichment",{}).get("urls",[])):
-        score+=15
+        score+=RISK_NEW_DOMAIN
         reasons.append("New domain detected")
     
     if case.get("identity",{}).get("credentials_submitted"):
-        score+=40
+        score+=RISK_IDENTITY
         reasons.append("Credentials submitted")
     
     if any(a.get("is_malicious") for a in case.get("attachment_analysis",[])):
-        score+=30
+        score+=RISK_ATTACHMENT
         reasons.append("Malicious attachment detected")
     
     case["risk"] = {

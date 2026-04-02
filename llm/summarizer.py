@@ -14,7 +14,9 @@ def generate_summary(case):
             User Interaction with mail: {case['user_interaction']}
             Risk: {case['risk']}
 
-        Provide a clear technical summary
+        Provide a clear technical summary with limited to 6-8 bullet points.
+        Only describe facts present in data.
+        Do not exaggerate or assume.
 
     """
 

@@ -2,7 +2,6 @@ import uuid
 from datetime import datetime
 
 def initialize_case(alert):
-    print(type(alert.get("raw_log")))
     case = {
         "case_id": str(uuid.uuid4()),
         "source": alert.get("source_system"),
