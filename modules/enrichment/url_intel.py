@@ -17,6 +17,10 @@ def analyze_url(case):
         
         score = 0
         reasons = []
+
+        if item.get("is_new_domain"):
+            score+= 2
+            reasons.append("Newly registered domain")
         
         if keywords:
             score += len(keywords)

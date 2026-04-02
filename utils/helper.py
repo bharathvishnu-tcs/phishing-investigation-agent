@@ -1,4 +1,5 @@
 import tldextract
+import random
 
 SUSPICIOUS_KEYWORDS = ["login", "verify", "secure", "update", "account"]
 
@@ -15,3 +16,7 @@ def find_suspicious_keywords(text):
             found.append(word)
     
     return found
+
+#needs to be changed with original data integration
+def simulate_domain_age(domain):
+    return random.randint(1,1000)

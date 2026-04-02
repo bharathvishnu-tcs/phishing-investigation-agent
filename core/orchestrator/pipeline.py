@@ -2,6 +2,7 @@ import uuid
 from datetime import datetime
 
 def initialize_case(alert):
+    print(type(alert.get("raw_log")))
     case = {
         "case_id": str(uuid.uuid4()),
         "source": alert.get("source_system"),
@@ -9,7 +10,9 @@ def initialize_case(alert):
         "email" : {
             "sender_email": alert.get("sender_email"),
             "subject" : alert.get("subject"),
-            "urls": alert.get("urls",[])
+            "urls": alert.get("urls",[]),
+            "attachments": alert.get("attachment",[]),
+            "attachments_hashes": alert.get("attachment.hashes",[])
         },
         "enrichment": {},
         "url_analysis": [],
@@ -19,8 +22,12 @@ def initialize_case(alert):
         "endpoint": {},
         "identity": {},
         "iocs": {},
+
+        "raw_log":alert.get("raw_log",{}),
+
         "decision": {},
         "response": [],
+        "risk":{},
         "summary": "",
         "llm_reasoning": "",
         "summary2": ""

@@ -7,6 +7,7 @@ class CaseState(TypedDict):
     enrichment: dict
     email: dict
 
+    header_analysis: dict
     url_analysis: list
     attachment_analysis: list
 
@@ -18,8 +19,11 @@ class CaseState(TypedDict):
 
     iocs: dict
 
+    raw_log: dict
+
     decision: dict
     response: list
+    risk: dict
 
     summary: str
     llm_reasoning: str

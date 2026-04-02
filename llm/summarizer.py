@@ -7,10 +7,12 @@ def generate_summary(case):
         Analyze the following phishing case:
             Classification: {case['decision']['classification']}
             URL Analysis: {case['url_analysis']}
+            Header Analysis: {case['header_analysis']}
             Spoofing Logs: {case['spoofing']}
             Identity Logs: {case['identity']}
             Attachment Analysis: {case['attachment_analysis']}
             User Interaction with mail: {case['user_interaction']}
+            Risk: {case['risk']}
 
         Provide a clear technical summary
 
@@ -29,6 +31,7 @@ def generate_summary2(case):
 
     Classification: {case['decision']['classification']}
     Severity: {case['decision']['severity']}
+    Risk: {case['risk']}
     
     Keep it simple and clear.
     """

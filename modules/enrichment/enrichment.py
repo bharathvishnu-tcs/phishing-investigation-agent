@@ -1,4 +1,4 @@
-from utils.helper import extract_domain,find_suspicious_keywords
+from utils.helper import extract_domain,find_suspicious_keywords,simulate_domain_age
 
 def enrich(case):
     
@@ -17,6 +17,13 @@ def enrich(case):
         })
     
     case["enrichment"]["urls"] = enriched_urls
+
+    for item in enriched_urls:
+        domain = item["domain"]
+        age = simulate_domain_age(domain)
+
+        item["domain_age_days"] = age
+        item["is_new_domain"] = age < 7
     
     # Enrich sender domain
     sender_email = email_data.get("sender_email", "")

@@ -33,4 +33,4 @@ class NormalizedAlert(TypedDict, total=False):
     # detection_logic: Optional[str]
     # vendor_confidence: Optional[int]
 
-    raw_log: str
+    raw_log: dict

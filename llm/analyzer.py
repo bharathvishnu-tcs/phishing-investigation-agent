@@ -5,6 +5,7 @@ def generate_reasoning(case):
         Explain why this alert is classified as {case['decision']['classification']}
 
         Provide step by step reasoning based on 
+            - Header Analysis
             - URL Analysis
             - Spoofing
             - Attachment Analysis
