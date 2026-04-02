@@ -1,9 +1,9 @@
 import json
 from datetime import datetime
-from modules.normalizer_model import NormalizedAlert
+from core.models.alert import NormalizedAlert
 
 def generate_alert_id(raw):
-    return f"ALERT->(hash(str(raw)) % 100000)"
+    return f"{hash(str(raw)) % 100000}"
 
 def extract_domain(email):
     if email and "@" in email:
@@ -45,8 +45,7 @@ def normalize(raw:dict) -> NormalizedAlert:
         alert["attachment_hases"] = []
 
     alert["detection_reason"] = "Suspicious email indicators detected"
-    alert["detection_logic"] = "SPF failure/ suspicious domain/ URL presence"
-    alert["vendor_confidence"] = 70
+    # alert["vendor_confidence"] = 70
 
     alert["raw_log"] = json.dumps(raw)
 

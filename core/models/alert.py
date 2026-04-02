@@ -1,4 +1,4 @@
-from typing import List, TypedDict
+from typing import List, TypedDict, Optional
 
 class NormalizedAlert(TypedDict, total=False):
     alert_id: str
@@ -30,7 +30,7 @@ class NormalizedAlert(TypedDict, total=False):
     user_principal: Optional[str]
 
     detection_reason: Optional[str]
-    detection_logic: Optional[str]
-    vendor_confidence: Optional[int]
+    # detection_logic: Optional[str]
+    # vendor_confidence: Optional[int]
 
     raw_log: str
