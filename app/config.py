@@ -1,1 +1,19 @@
-#API Keys
+# Suspicious keywords in URLs
+SUSPICIOUS_KEYWORDS = ["login", "verify", "secure", "account", "update"]
+SUSPICIOUS_TLDS = ["xyz", "top", "click", "info"]
+# URL scoring
+URL_KEYWORD_SCORE = 1
+DOMAIN_MISMATCH_SCORE = 2
+NEW_DOMAIN_SCORE = 2
+LOOKALIKE_DOMAIN_SCORE = 2
+URL_TLDS_SCORE = 1
+
+URL_MALICIOUS_THRESHOLD = 3
+
+# Risk scoring
+RISK_URL = 30
+RISK_SPOOFING = 20
+RISK_HEADER = 20
+RISK_NEW_DOMAIN = 15
+RISK_IDENTITY = 40
+RISK_ATTACHMENT = 30

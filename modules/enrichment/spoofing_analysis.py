@@ -9,6 +9,7 @@ def analyze_spoofing(case):
     reasons = []
     
     if sender_domain:
+        #needs to be changed
         legit_domains = ["paypal.com", "microsoft.com", "google.com"]
         
         for legit in legit_domains:

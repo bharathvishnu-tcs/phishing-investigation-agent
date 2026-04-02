@@ -10,9 +10,6 @@ def analyze_user_interaction(case):
         "attachment_opened": False
     }
   
-    for url in urls:
-        if url.get("is_malicious"):
-            interaction["link_clicked"] = True
     
     case["user_interaction"] = interaction
     

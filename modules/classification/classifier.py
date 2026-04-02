@@ -42,6 +42,14 @@ def classify(case):
         classification = "False Positive"
         severity = "low"
         reasons.append("No strong malicious indicators")
+
+    #adjusting severity wrt risk_level
+    risk_score = case.get("risk",{}).get("score",0)
+
+    if severity == "medium" and risk_score >= 70:
+        severity = "high"
+    elif severiy == "high" and risk_score >= 85:
+        severity = "critical"
     
     case["decision"] = {
         "classification": classification,

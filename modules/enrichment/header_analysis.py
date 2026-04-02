@@ -1,6 +1,5 @@
 def analyze_header(case):
     raw_log = case.get("raw_log",{})
-    print(raw_log.get("spf_result"))
     header_analysis = {
         "spf":raw_log.get("spf_result","unknown"),
         #can add more 
