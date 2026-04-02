@@ -21,6 +21,8 @@ def initialize_case(alert):
         "iocs": {},
         "decision": {},
         "response": [],
-        "summary": ""
+        "summary": "",
+        "llm_reasoning": "",
+        "summary2": ""
     }
     return case

@@ -22,3 +22,5 @@ class CaseState(TypedDict):
     response: list
 
     summary: str
+    llm_reasoning: str
+    summary2: str
