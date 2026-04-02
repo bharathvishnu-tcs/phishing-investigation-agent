@@ -1,4 +1,5 @@
-class CaseState(TypeDict):
+from typing import TypedDict
+class CaseState(TypedDict):
     case_id: str
     source: str
     timestamp: str
