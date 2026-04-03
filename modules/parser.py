@@ -21,7 +21,7 @@ def normalize(raw:dict) -> NormalizedAlert:
     alert["alert_type"] = "Phishing"
     alert["severity"] = "Medium"
 
-    event_tume = raw.get("timestamp")
+    event_time = raw.get("timestamp")
     try:
         alert["event_timestamp"] = datetime.fromisoformat(event_time).isoformat()
     except:
