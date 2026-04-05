@@ -28,3 +28,5 @@ class CaseState(TypedDict):
     summary: str
     llm_reasoning: str
     summary2: str
+
+    authentication_results: str

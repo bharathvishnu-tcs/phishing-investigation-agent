@@ -7,13 +7,17 @@ def calculate_risk(case):
         score += RISK_URL
         reasons.append("Malicious URL detected")
 
-    if case.get("spoofing",{}).get("is_spoofed"):
-        score+= RISK_SPOOFING
-        reasons.append("Spoofed sender detected")
+    spoof_score = case.get("spoofing", {}).get("spoof_score", 0)
+
+    if spoof_score > 0:
+        score += spoof_score * 5
+        reasons.append("Sender spoofing / typosquatting indicators detected")
     
-    if case.get("header_analysis",{}).get("is_suspicious"):
-        score+=RISK_HEADER
-        reasons.append("Email Authentication failed")
+    # Email authentication risk (SPF/DKIM/DMARC weighted)
+    auth_risk = case.get("header_analysis", {}).get("auth_risk", 0)
+    if auth_risk > 0:
+        score += auth_risk
+        reasons.append("SPF/DKIM/DMARC authentication issues detected")
 
     if any(u.get("is_new_domain") for u in case.get("enrichment",{}).get("urls",[])):
         score+=RISK_NEW_DOMAIN

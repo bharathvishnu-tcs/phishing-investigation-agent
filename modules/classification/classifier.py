@@ -48,7 +48,7 @@ def classify(case):
 
     if severity == "medium" and risk_score >= 70:
         severity = "high"
-    elif severiy == "high" and risk_score >= 85:
+    elif severity == "high" and risk_score >= 85:
         severity = "critical"
     
     case["decision"] = {
