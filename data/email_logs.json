@@ -4,7 +4,7 @@
         "sender": "abc@paypa1.com",
         "recipient": "xyz@company.com",
         "subject":"Verify your account",
-        "timestamp": "20226-03-25T10:00:00",
+        "timestamp": "2026-03-25T10:00:00",
         "spf_result":"fail",
         "urls":["https://paypa1-login.com"],
         "attachment":
