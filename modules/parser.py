@@ -45,6 +45,8 @@ def normalize(raw:dict) -> NormalizedAlert:
         alert["attachment_hases"] = []
 
     alert["detection_reason"] = "Suspicious email indicators detected"
+    alert["authentication_results"] = raw.get("authentication_results", "")
+    
     # alert["vendor_confidence"] = 70
 
     alert["raw_log"] = raw

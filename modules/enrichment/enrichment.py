@@ -1,7 +1,6 @@
 from utils.helper import extract_domain,find_suspicious_keywords,simulate_domain_age
 
 def enrich(case):
-    
     email_data = case.get("email", {})
     urls = email_data.get("urls", [])
     
@@ -34,5 +33,10 @@ def enrich(case):
         sender_domain = None
     
     case["enrichment"]["sender_domain"] = sender_domain
+
+    auth = case.get("authentication_results", "").lower()
+    case["raw_log"]["spf_result"] = "fail" if "spf=fail" in auth else "pass"
+    case["raw_log"]["dkim_result"] = "fail" if "dkim=fail" in auth else "pass"
+    case["raw_log"]["dmarc_result"] = "fail" if "dmarc=fail" in auth else "pass"
     
     return case

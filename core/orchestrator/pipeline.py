@@ -21,6 +21,7 @@ def initialize_case(alert):
         "endpoint": {},
         "identity": {},
         "iocs": {},
+        "authentication_results": alert.get("authentication_results", ""),
 
         "raw_log":alert.get("raw_log",{}),
 

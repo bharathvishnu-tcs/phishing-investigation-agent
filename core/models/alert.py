@@ -30,6 +30,7 @@ class NormalizedAlert(TypedDict, total=False):
     user_principal: Optional[str]
 
     detection_reason: Optional[str]
+    authentication_results: Optional[str]
     # detection_logic: Optional[str]
     # vendor_confidence: Optional[int]
 
