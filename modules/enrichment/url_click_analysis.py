@@ -6,7 +6,12 @@ def domain_similarity(domain1,domain2):
     return difflib.SequenceMatcher(None, domain1,domain2).ratio()
 
 def analyze_url(case:dict) -> dict:
-    
+    """
+    analyzes each clicked URL in a case for phishing risk by checking domain age,
+    suspicious keywords, mismatches, lookalike domains, TLDs, and length
+    enriches the case with a risk score and reasons for each URL
+
+    """ 
     sender_domain = case.get("email_evidence", {}).get("sender_domain", "")
     
     for item in case.get("url_click_evidence", []):
@@ -52,6 +57,5 @@ def analyze_url(case:dict) -> dict:
             "reasons": reasons,
             "is_malicious": score >= URL_MALICIOUS_THRESHOLD
         }
-    print(case)
     return case
 
