@@ -9,7 +9,7 @@ from modules.parser import load_and_normalize
 from modules.enrichment.enrichment import enrich
 from modules.enrichment.header_analysis import analyze_header
 from core.orchestrator.pipeline import initialize_case
-from modules.enrichment.url_intel import analyze_url
+from modules.enrichment.url_click_analysis import analyze_url
 from modules.enrichment.spoofing_analysis import analyze_spoofing
 from modules.enrichment.user_interaction import analyze_user_interaction
 from modules.enrichment.identity_analysis import analyze_identity
@@ -49,11 +49,12 @@ def run_pipeline():
         ]
 
         for name,module in modules:
-            try:
-                logging.info(f"Running {name}")
-                case = module(case)
-            except Exception as e:
-                logging.error(f"{name} failed : {e}")
+            # try:
+            #     logging.info(f"Running {name}")
+            #     case = module(case)
+            # except Exception as e:
+            #     logging.error(f"{name} failed : {e}")
+            case = module(case)
         
         case = generate_summary(case)
         case = generate_summary2(case)

@@ -31,6 +31,9 @@ class CaseState(TypedDict, total=False):
     # Correlated timeline (critical for LLM reasoning)
     timeline: List[Dict]
 
+    #Checking url
+    urls: List[Dict]
+
     # Investigation flags (derived progressively by nodes)
     user_compromised: bool
     post_click_activity: bool

@@ -15,7 +15,7 @@ def enrich(case):
             "keywords": find_suspicious_keywords(url)
         })
     
-    case["enrichment"]["urls"] = enriched_urls
+    case["urls"] = enriched_urls
 
     for item in enriched_urls:
         domain = item["domain"]
@@ -32,7 +32,7 @@ def enrich(case):
     else:
         sender_domain = None
     
-    case["enrichment"]["sender_domain"] = sender_domain
+    # case["enrichment"]["sender_domain"] = sender_domain
 
     auth = case.get("authentication_results", "").lower()
     case["raw_log"]["spf_result"] = "fail" if "spf=fail" in auth else "pass"

@@ -15,5 +15,5 @@ def investigate():
     case = run_pipeline()
 
     result = format_output(case)
-
+    print(result)
     return result

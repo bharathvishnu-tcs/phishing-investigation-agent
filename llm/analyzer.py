@@ -9,13 +9,12 @@ def generate_reasoning(case):
         Do NOT assume anything outside the input.
 
         Data:
-        Sender: {case['email']['sender_email']}
-        Subject: {case['email']['subject']}
-        URL Analysis: {case['url_analysis']}
+        URL Analysis: {case['url_click_evidence']}
         Spoofing: {case['spoofing']}
         Header: {case['header_analysis']}
         User Interaction: {case['user_interaction']}
         Identity: {case['identity']}
+        Endpoint: {case['endpoint_evidence']}
 
         Explain step-by-step why this is classified as:
         {case['decision']['classification']}
