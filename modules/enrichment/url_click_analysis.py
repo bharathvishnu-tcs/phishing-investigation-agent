@@ -52,6 +52,6 @@ def analyze_url(case:dict) -> dict:
             "reasons": reasons,
             "is_malicious": score >= URL_MALICIOUS_THRESHOLD
         }
-    
+    print(case)
     return case
 

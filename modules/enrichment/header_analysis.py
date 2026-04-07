@@ -1,33 +1,15 @@
-from unittest import case
-
-
 def analyze_header(case):
-    raw_log = case.get("raw_log", {})
-    headers = case.get("headers", {})
-    header_text = str(headers).lower()
+    """
+    Uses normalized authentication results from email_evidence
+    and converts them into risk scoring + reasoning.
+    """
 
-    # Extract auth results from raw_log OR headers
-    spf = raw_log.get("spf_result", "unknown")
-    dkim = raw_log.get("dkim_result", "unknown")
-    dmarc = raw_log.get("dmarc_result", "unknown")
+    email_evidence = case.get("email_evidence", {})
+    auth = email_evidence.get("authentication_results", {})
 
-    # Fallback: parse from authentication-results header if present
-    auth_header = header_text
-
-    if "spf=fail" in auth_header:
-        spf = "fail"
-    elif "spf=pass" in auth_header:
-        spf = "pass"
-
-    if "dkim=fail" in auth_header:
-        dkim = "fail"
-    elif "dkim=pass" in auth_header:
-        dkim = "pass"
-
-    if "dmarc=fail" in auth_header:
-        dmarc = "fail"
-    elif "dmarc=pass" in auth_header:
-        dmarc = "pass"
+    spf = auth.get("spf", "unknown").lower()
+    dkim = auth.get("dkim", "unknown").lower()
+    dmarc = auth.get("dmarc", "unknown").lower()
 
     reasons = []
     risk_score = 0
@@ -44,14 +26,16 @@ def analyze_header(case):
         reasons.append("DMARC authentication failed")
         risk_score += 15
 
-    is_suspicious = risk_score > 0
+    # Very important SOC logic
+    if spf == "pass" and dkim == "pass" and dmarc == "pass":
+        reasons.append("All authentication checks passed")
 
     case["header_analysis"] = {
         "spf": spf,
         "dkim": dkim,
         "dmarc": dmarc,
-        "auth_risk": risk_score,
-        "is_suspicious": is_suspicious,
+        "score": risk_score,
+        "is_suspicious": risk_score > 0,
         "reasons": reasons
     }
 
