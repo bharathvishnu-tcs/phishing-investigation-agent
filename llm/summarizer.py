@@ -9,10 +9,10 @@ def generate_summary(case):
             URL Analysis: {case['url_click_evidence']}
             Header Analysis: {case['header_analysis']}
             Spoofing Logs: {case['spoofing']}
-            Identity Logs: {case['identity']}
+            Identity Logs: {case['sign_in_evidence']}
             Attachment Analysis: {case['attachment_evidence']}
             Endpoint Analysis: {case['endpoint_evidence']}
-            User Interaction with mail: {case['sign_in_evidence']}
+            User Interaction with mail: {case['url_click_evidence']}
             Risk: {case['risk']}
 
         Provide a clear technical summary with limited to 6-8 bullet points.

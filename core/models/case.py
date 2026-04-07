@@ -20,7 +20,7 @@ class CaseState(TypedDict, total=False):
 
     # Identity & sign-in evidence
     sign_in_evidence: List[Dict]
-    impossible_travel: Dict
+    impossible_travel: bool
 
     # Mailbox persistence evidence (rules/forwarding)
     mailbox_rule_evidence: List[Dict]
