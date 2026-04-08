@@ -2,6 +2,26 @@ import difflib
 from app.config import * 
 from utils.helper import extract_domain, find_suspicious_keywords, simulate_domain_age
 
+import json
+
+def ingest_url_click_log(path: str) -> dict:
+    with open(path, "r") as f:
+        return json.load(f)
+    
+def add_url_click_evidence(case: dict, log: dict) -> dict:
+    case.setdefault("url_click_evidence", []).append({
+        "url": log.get("Url"),
+        "user": log.get("UserId"),
+        "ip_address": log.get("IPAddress"),
+        "device": log.get("DeviceName"),
+        "click_action": log.get("ClickAction"),
+        "clicked_through": log.get("IsClickedThrough"),
+        "verdict": log.get("Verdict"),
+        "threat_type": log.get("ThreatTypes"),
+        "timestamp": log.get("TimeGenerated")
+    })
+    return case
+
 def domain_similarity(domain1,domain2):
     return difflib.SequenceMatcher(None, domain1,domain2).ratio()
 
@@ -13,7 +33,10 @@ def analyze_url(case:dict) -> dict:
 
     """ 
     sender_domain = case.get("email_evidence", {}).get("sender_domain", "")
-    
+    raw_log = ingest_url_click_log("data/url_click_logs.json")
+
+    case = add_url_click_evidence(case, raw_log)
+
     for item in case.get("url_click_evidence", []):
         url = item.get("url")
         domain = extract_domain(url)
@@ -44,7 +67,7 @@ def analyze_url(case:dict) -> dict:
             score += URL_TLDS_SCORE
             reasons.append("Suspicious TLD")
     
-        if len(domain) > 25:
+        if len(domain) > 125:
             score += LONG_URL
             reasons.append("Unusually long domain")
         
@@ -57,5 +80,6 @@ def analyze_url(case:dict) -> dict:
             "reasons": reasons,
             "is_malicious": score >= URL_MALICIOUS_THRESHOLD
         }
+
     return case
 

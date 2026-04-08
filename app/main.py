@@ -32,7 +32,6 @@ def run_pipeline():
     
         case = initialize_case(alert)
         modules = [
-            ("enrichment",enrich),
             ("header_analysis",analyze_header),
             ("url_analysis",analyze_url),
             ("attachment_analysis",analyze_attachments),

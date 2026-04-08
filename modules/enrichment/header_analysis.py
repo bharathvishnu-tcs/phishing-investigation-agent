@@ -7,9 +7,9 @@ def analyze_header(case):
     email_evidence = case.get("email_evidence", {})
     auth = email_evidence.get("authentication_results", {})
 
-    spf = auth.get("spf", "unknown").lower()
-    dkim = auth.get("dkim", "unknown").lower()
-    dmarc = auth.get("dmarc", "unknown").lower()
+    spf = auth.get("SPF", "unknown").lower()
+    dkim = auth.get("DKIM", "unknown").lower()
+    dmarc = auth.get("DMARC", "unknown").lower()
 
     reasons = []
     risk_score = 0
@@ -38,5 +38,5 @@ def analyze_header(case):
         "is_suspicious": risk_score > 0,
         "reasons": reasons
     }
-
+    
     return case
