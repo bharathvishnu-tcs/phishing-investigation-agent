@@ -46,7 +46,7 @@ def analyze_identity(case):
 
         #can be adjusted
         if distance > 3000 and time_diff < 2:
-            impossible_travel = False
+            impossible_travel = True
 
     # needs to add failure multiple detection 
 

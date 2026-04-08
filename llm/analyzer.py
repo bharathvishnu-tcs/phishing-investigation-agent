@@ -12,8 +12,8 @@ def generate_reasoning(case):
         URL Analysis: {case['url_click_evidence']}
         Spoofing: {case['spoofing']}
         Header: {case['header_analysis']}
-        User Interaction: {case['user_interaction']}
-        Identity: {case['identity']}
+        User Interaction: {case['url_click_evidence']}
+        Identity: {case['sign_in_evidence']}
         Endpoint: {case['endpoint_evidence']}
 
         Explain step-by-step why this is classified as:
