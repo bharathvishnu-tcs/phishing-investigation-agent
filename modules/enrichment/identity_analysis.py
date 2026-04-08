@@ -70,5 +70,5 @@ def analyze_identity(case):
     # -------------------------------
     case["sign_in_evidence"] = identity
     case["impossible_travel"] = impossible_travel
-
+    print(f"Identity analysis: {identity}, Impossible travel: {impossible_travel}")
     return case

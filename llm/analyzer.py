@@ -13,7 +13,7 @@ def generate_reasoning(case):
         Spoofing: {case['spoofing']}
         Header: {case['header_analysis']}
         User Interaction: {case['user_interaction']}
-        Identity: {case['identity']}
+        Identity: {case['sign_in_evidence']}
         Endpoint: {case['endpoint_evidence']}
 
         Explain step-by-step why this is classified as:

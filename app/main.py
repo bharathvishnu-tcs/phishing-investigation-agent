@@ -6,7 +6,6 @@ logging.basicConfig(level = logging.INFO)
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from modules.parser import load_and_normalize
-from modules.enrichment.enrichment import enrich
 from modules.enrichment.header_analysis import analyze_header
 from core.orchestrator.pipeline import initialize_case
 from modules.enrichment.url_click_analysis import analyze_url
@@ -33,7 +32,6 @@ def run_pipeline():
     
         case = initialize_case(alert)
         modules = [
-            ("enrichment",enrich),
             ("header_analysis",analyze_header),
             ("url_analysis",analyze_url),
             ("attachment_analysis",analyze_attachments),
