@@ -54,8 +54,9 @@ def run_pipeline():
             #     logging.error(f"{name} failed : {e}")
             case = module(case)
         
-        case = generate_summary(case)
-        case = generate_summary2(case)
-        case = generate_reasoning(case)
-
+        # case = generate_summary(case)
+        # case = generate_summary2(case)
+        # case = generate_reasoning(case)
+        print(case)
         return case
+

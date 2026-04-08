@@ -1,53 +1,55 @@
-from app.config import *
 def calculate_risk(case):
+
+    stages = case.get("decision", {}).get("attack_stages", {})
+
     score = 0
     reasons = []
 
-    if any(u.get("is_malicious") for u in case.get("url_analysis",[])):
-        score += RISK_URL
-        reasons.append("Malicious URL detected")
+    if stages.get("delivery"):
+        score += 5
+        reasons.append("Phishing email delivered")
 
-    spoof_score = case.get("spoofing", {}).get("spoof_score", 0)
+    if stages.get("interaction"):
+        score += 15
+        reasons.append("User interacted with phishing content")
 
-    if spoof_score > 0:
-        score += spoof_score * 5
-        reasons.append("Sender spoofing / typosquatting indicators detected")
-    
-    # Email authentication risk (SPF/DKIM/DMARC weighted)
-    auth_risk = case.get("header_analysis", {}).get("auth_risk", 0)
-    if auth_risk > 0:
-        score += auth_risk
-        reasons.append("SPF/DKIM/DMARC authentication issues detected")
+    if stages.get("execution"):
+        score += 20
+        reasons.append("Endpoint executed suspicious activity")
 
-    if any(u.get("is_new_domain") for u in case.get("enrichment",{}).get("urls",[])):
-        score+=RISK_NEW_DOMAIN
-        reasons.append("New domain detected")
-    
-    if case.get("identity",{}).get("credentials_submitted"):
-        score+=RISK_IDENTITY
-        reasons.append("Credentials submitted")
-    
-    if any(a.get("is_malicious") for a in case.get("attachment_analysis",[])):
-        score+=RISK_ATTACHMENT
-        reasons.append("Malicious attachment detected")
-    
+    if stages.get("credential_access"):
+        score += 40
+        reasons.append("Credentials potentially compromised")
+
+    if stages.get("persistence"):
+        score += 30
+        reasons.append("Attacker persistence established")
+
+    if stages.get("lateral_movement"):
+        score += 25
+        reasons.append("Suspicious login / impossible travel")
+
+    if stages.get("exfiltration"):
+        score += 50
+        reasons.append("Potential data exfiltration")
+
+    # Cap score
+    score = min(score, 100)
+
+    # Risk Levels
+    if score >= 80:
+        level = "Critical"
+    elif score >= 60:
+        level = "High"
+    elif score >= 30:
+        level = "Medium"
+    else:
+        level = "Low"
+
     case["risk"] = {
-        "score": min(score,100),
-        "level": get_risk_level(score),
+        "score": score,
+        "level": level,
         "reasons": reasons
     }
 
     return case
-
-
-def get_risk_level(score):
-    if score>=80:
-        return "Critical"
-    elif score>=60:
-        return "High"
-    elif score>=30:
-        return "Medium"
-    else:
-        return "Low"
-
-    
