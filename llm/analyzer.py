@@ -12,7 +12,7 @@ def generate_reasoning(case):
         URL Analysis: {case['url_click_evidence']}
         Spoofing: {case['spoofing']}
         Header: {case['header_analysis']}
-        User Interaction: {case['user_interaction']}
+        User Interaction: {case['url_click_evidence']}
         Identity: {case['sign_in_evidence']}
         Endpoint: {case['endpoint_evidence']}
 
