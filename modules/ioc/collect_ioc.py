@@ -39,10 +39,15 @@ def collect_ioc(case: dict) -> dict:
             iocs["file_hashes"].add(file_hash)
 
     # Sign-in / endpoint evidence for IPs
-    # for endpoint in case.get("endpoint_evidence", []).get("normalized", []):
-    #     ip = endpoint["ip"]
-    #     if ip:
-    #         iocs["ip_addresses"].add(ip)
+    for url in case.get("url_click_evidence", []):
+        ip = url.get("ip_address")
+        if ip:
+            iocs["ip_addresses"].add(ip)
+
+    endpoint = case.get("endpoint_evidence", {}).get("normalized", {})
+    ip = endpoint.get("ip")
+    if ip:
+        iocs["ip_addresses"].add(ip)
 
     # Impossible travel detection IPs
     # impossible = case.get("impossible_travel", {})
@@ -54,5 +59,5 @@ def collect_ioc(case: dict) -> dict:
 
     # Convert sets to lists for JSON serialization
     case["iocs"] = {k: list(v) for k, v in iocs.items()}
-
+    print("Collected IOCs:", case["iocs"])
     return case
