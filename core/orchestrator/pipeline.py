@@ -21,6 +21,7 @@ def initialize_case(alert: dict) -> dict:
             "authentication_results": alert.get("authentication_results", {}),
             "detection_reason": alert.get("detection_reason"),
             "message_id": alert.get("message_id"),
+            "delivery_action": alert.get("delivery_action"),
         },
 
         "url_click_evidence": [],

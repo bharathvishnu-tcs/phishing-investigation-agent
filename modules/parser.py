@@ -38,7 +38,7 @@ def normalize(raw:dict) -> NormalizedAlert:
     alert["recipient_emails"] = [recipient] if recipient else []
     alert["subject"] = raw.get("Subject", "")
     alert["message_id"] = raw.get("NetworkMessageId")
-
+    alert["delivery_action"] = raw.get("DeliveryAction")
     alert["urls"] = []
 
     # Attachments (email level evidence only)
