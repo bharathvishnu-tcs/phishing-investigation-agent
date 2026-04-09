@@ -1,115 +1,94 @@
 def classify(case):
+
+
+    email = case.get("email_evidence", {})
+    url_clicks = case.get("url_click_evidence", [])
+    attachments = case.get("attachment_evidence", [])
+    endpoint = case.get("endpoint_evidence", {})
+    signins = case.get("sign_in_evidence", {})
     
-    url_analysis = case.get("url_analysis", [])
-    malicious_url = any(u.get("is_malicious") for u in url_analysis)
-
-    attachments = case.get("attachment_analysis", [])
-    malicious_attachment = any(a.get("is_malicious") for a in attachments)
-
     spoofed = case.get("spoofing", {}).get("is_spoofed", False)
-    link_clicked = case.get("user_interaction", {}).get("link_clicked", False)
-    attachment_opened = case.get("user_interaction", {}).get("attachment_opened", False)
+    header_suspicious = case.get("header_analysis", {}).get("is_suspicious", False)
 
-    creds = case.get("identity", {}).get("credentials_submitted", False)
-    multiple_failed_logins = case.get("identity", {}).get("multiple_failed_logins", False)
+    malicious_url = any(u.get("analysis", {}).get("is_malicious") for u in url_clicks)
+    link_clicked = any(u.get("clicked_through") for u in url_clicks)
 
-    domain_age_days = case.get("enrichment", {}).get("urls", [{}])[0].get("domain_age_days", 999)
+    malicious_attachment = any(a.get("analysis", {}).get("is_malicious") for a in attachments)
+    attachment_opened = any(a.get("opened") for a in attachments)
 
-    classification = "False Positive"
-    severity = "low"
-    reasons = []
-    features = {
-        "has_malicious_url": malicious_url,
-        "has_malicious_attachment": malicious_attachment,
-        "is_spoofed": spoofed,
-        "link_clicked": link_clicked,
-        "attachment_opened": attachment_opened,
-        "creds": creds,
-        "multiple_failed_logins": multiple_failed_logins,
-        "new_domain": domain_age_days < 7,   
+    creds = signins.get("credentials_submitted", False)
+    impossible_travel = case.get("impossible_travel", False)
+
+    endpoint_suspicious = endpoint.get("verdict") in ["Medium Risk", "High Risk"]
+
+    persistence = len(case.get("mailbox_rule_evidence", [])) > 0
+    data_exfiltration = len(case.get("data_access_evidence", [])) > 0
+
+    email_delivered = case.get("user_interaction", {}).get("email_delivered", False)
+
+
+    # =========================
+    stages = {
+        "delivery": email_delivered,
+        "interaction": link_clicked or attachment_opened,
+        "execution": endpoint_suspicious,
+        "credential_access": creds,
+        "persistence": persistence,
+        "lateral_movement": impossible_travel,
+        "exfiltration": data_exfiltration
     }
 
-    SCENARIOS = [
+ 
+    if stages["credential_access"] and stages["interaction"]:
+        classification = "Confirmed Phishing → Credential Compromise"
+        severity = "critical"
 
-    # ===== IMPACT (Critical) =====
-    {
-        "name": "Credential Harvesting (Account Compromise)",
-        "severity": "critical",
-        "when": lambda f: f["creds"]
-    },
-    {
-        "name": "Account Takeover Attempt After Phishing",
-        "severity": "critical",
-        "when": lambda f: f["multiple_failed_logins"] and (f["has_malicious_url"] or f["is_spoofed"])
-    },
+    elif stages["exfiltration"]:
+        classification = "Data Exfiltration Detected"
+        severity = "critical"
 
-    # ===== DELIVERY + PAYLOAD (High) =====
-    {
-        "name": "Malware Execution via Phishing Attachment",
-        "severity": "high",
-        "when": lambda f: f["attachment_opened"] and f["has_malicious_attachment"]
-    },
-    {
-        "name": "User Clicked Malicious Phishing Link",
-        "severity": "high",
-        "when": lambda f: f["link_clicked"] and f["has_malicious_url"]
-    },
+    elif stages["persistence"]:
+        classification = "Post-Compromise Persistence Established"
+        severity = "critical"
 
-    # ===== DELIVERY ONLY (Medium-High) =====
-    {
-        "name": "Malware Delivery Attempt (Attachment Not Opened)",
-        "severity": "medium",
-        "when": lambda f: f["has_malicious_attachment"]
-    },
-    {
-        "name": "Phishing Link Clicked (No Known Malicious Verdict Yet)",
-        "severity": "medium",
-        "when": lambda f: f["link_clicked"]
-    },
+    elif stages["lateral_movement"]:
+        classification = "Account Takeover / Suspicious Login Activity"
+        severity = "high"
 
-    # ===== INTENT ONLY (Medium) =====
-    {
-        "name": "Spoofed Sender Phishing Attempt",
-        "severity": "medium",
-        "when": lambda f: f["is_spoofed"]
-    },
-    {
-        "name": "New Domain Phishing Lure",
-        "severity": "medium",
-        "when": lambda f: f["new_domain"]
-    },
-    {
-        "name": "Malicious URL Detected (No Interaction)",
-        "severity": "medium",
-        "when": lambda f: f["has_malicious_url"]
-    },
+    # ===== HIGH =====
+    elif stages["interaction"] and malicious_url:
+        classification = "User Clicked Verified Malicious Phishing Link"
+        severity = "high"
 
-    # ===== LOW CONFIDENCE =====
-    {
-        "name": "Suspicious Email Indicators",
-        "severity": "low",
-        "when": lambda f: True
-    }
-    ]
-    matched = None
+    elif stages["execution"] and malicious_attachment:
+        classification = "Malware Execution via Attachment"
+        severity = "high"
 
-    for scenario in SCENARIOS:
-        if scenario["when"](features):
-            matched = scenario
-            break
+    # ===== MEDIUM =====
+    elif malicious_url:
+        classification = "Malicious Phishing Link Delivered"
+        severity = "medium"
 
-    if matched:
-        classification = matched["name"]
-        severity = matched["severity"]
+    elif malicious_attachment:
+        classification = "Malicious Attachment Delivered"
+        severity = "medium"
+
+    elif spoofed or header_suspicious:
+        classification = "Spoofed / Suspicious Email"
+        severity = "medium"
+
+    # ===== LOW =====
     else:
-        classification = "False Positive"
+        classification = "Suspicious / Low Confidence Phishing"
         severity = "low"
 
-    reasons = [k for k, v in features.items() if v]
-    
+    reasons = [k for k, v in stages.items() if v]
+
     case["decision"] = {
         "classification": classification,
         "severity": severity,
+        "attack_stages": stages,
         "reasons": reasons
     }
+
     return case

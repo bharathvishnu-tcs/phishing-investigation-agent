@@ -1,17 +1,21 @@
 [
-   {
-    "alert_name": "Malicious Attachment Detected",
-    "sender": "billing@amaz0n-payments.com",
-    "recipient": "finance@company.com",
-    "subject": "Invoice Payment Pending",
-    "timestamp": "2026-03-25T12:05:00",
-    "urls": ["http://amaz0n-billing.com/invoice"],
-    "attachment": {
-      "exists": true,
-      "name": "invoice.exe",
-      "hash": "ghi789rst"
+  {
+    "TimeGenerated": "2026-03-12T08:37:21Z",
+    "NetworkMessageId": "a1b2c3d4-e5f6-7890-abcd-1234567890ab",
+    "SenderFromAddress": "support@micros0ft-security.com",
+    "SenderDomain": "micros0ft-security.com",
+    "RecipientEmailAddress": "user1@company.com",
+    "Subject": "[URGENT] Password Expiry Notification",
+    "DeliveryAction": "Delivered",
+    "ThreatTypes": "Phish",
+    "DetectionMethods": "URL reputation, Domain impersonation",
+    "AuthenticationDetails": {
+      "SPF": "Fail",
+      "DKIM": "None",
+      "DMARC": "Fail"
     },
-    "authentication_results": "spf=fail smtp.mailfrom=amaz0n-payments.com; dkim=fail; dmarc=fail"
-    
+    "UrlCount": 1,
+    "AttachmentCount": 0,
+    "ConfidenceLevel": "High"
   }
 ]

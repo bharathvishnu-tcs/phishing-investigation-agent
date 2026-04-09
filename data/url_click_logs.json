@@ -1,0 +1,12 @@
+{
+  "TimeGenerated": "2026-03-12T08:39:10Z",
+  "UserId": "user1@company.com",
+  "Url": "http://login-microsoftonline-security.com/auth",
+  "ClickAction": "Allowed",
+  "Workload": "Exchange",
+  "IPAddress": "185.225.69.45",
+  "DeviceName": "WIN-USER01",
+  "IsClickedThrough": true,
+  "ThreatTypes": "Phishing",
+  "Verdict": "Malicious"
+}

@@ -6,12 +6,13 @@ def generate_summary(case):
 
         Analyze the following phishing case:
             Classification: {case['decision']['classification']}
-            URL Analysis: {case['url_analysis']}
+            URL Analysis: {case['url_click_evidence']}
             Header Analysis: {case['header_analysis']}
             Spoofing Logs: {case['spoofing']}
-            Identity Logs: {case['identity']}
-            Attachment Analysis: {case['attachment_analysis']}
-            User Interaction with mail: {case['user_interaction']}
+            Identity Logs: {case['sign_in_evidence']}
+            Attachment Analysis: {case['attachment_evidence']}
+            Endpoint Analysis: {case['endpoint_evidence']}
+            User Interaction with mail: {case['url_click_evidence']}
             Risk: {case['risk']}
 
         Provide a clear technical summary with limited to 6-8 bullet points.

@@ -1,8 +1,13 @@
 import difflib
 
 def analyze_spoofing(case):
-    sender_email = case.get("email", {}).get("sender_email", "")
-    sender_domain = case.get("enrichment", {}).get("sender_domain", "")
+    """
+    Detects typosquatting, generic sender names, and DMARC failures
+    using normalized email evidence.
+    """
+    email_evidence = case.get("email_evidence", {})
+    sender_email = email_evidence.get("sender_email", "")
+    sender_domain = email_evidence.get("sender_domain", "")
 
     spoof_score = 0
     reasons = []
@@ -28,7 +33,7 @@ def analyze_spoofing(case):
         reasons.append("Generic role-based sender name used")
 
     # Combine with header auth failure
-    header_auth = case.get("header_analysis", {})
+    header_auth = email_evidence.get("header_analysis", {})
     if header_auth.get("dmarc") == "fail":
         spoof_score += 2
         reasons.append("DMARC failure increases spoof likelihood")

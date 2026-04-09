@@ -16,12 +16,12 @@ def normalize(raw:dict) -> NormalizedAlert:
     alert["alert_id"] = generate_alert_id(raw)
     alert["case_id"] = None
 
-    alert["source_system"] = raw.get("alert_source","M365")
+    alert["source_system"] = raw.get("source","M365")
     alert["detection_type"] = "SystemDetected"
-    alert["alert_type"] = "Phishing"
+    alert["alert_type"] = raw.get("ThreatTypes")
     alert["severity"] = "Medium"
 
-    event_time = raw.get("timestamp")
+    event_time = raw.get("TimeGenerated")
     try:
         alert["event_timestamp"] = datetime.fromisoformat(event_time).isoformat()
     except:
@@ -29,25 +29,35 @@ def normalize(raw:dict) -> NormalizedAlert:
 
     alert["ingestion_timestamp"] = datetime.utcnow().isoformat()
 
-    alert["sender_email"] = raw.get("sender","").lower()
-    alert["sender_domain"] = extract_domain(alert["sender_email"])
-    alert["recipient_emails"] = [raw.get("recipient","").lower()]
-    alert["subject"] = raw.get("subject")
+    sender = raw.get("SenderFromAddress", "").lower()
+    recipient = raw.get("RecipientEmailAddress", "").lower()
 
-    alert["urls"] = raw.get("urls",[])
+    #email metadata
+    alert["sender_email"] = sender
+    alert["sender_domain"] = raw.get("SenderDomain", "").lower() or extract_domain(sender)
+    alert["recipient_emails"] = [recipient] if recipient else []
+    alert["subject"] = raw.get("Subject", "")
+    alert["message_id"] = raw.get("NetworkMessageId")
+    alert["delivery_action"] = raw.get("DeliveryAction")
+    alert["urls"] = []
 
-    attachment = raw.get("attachment",{})
-    if attachment.get("exists"):
-        alert["attachment"] = [attachment.get("name")]
-        alert["attachment_hashes"] = [attachment.get("hash")]
+    # Attachments (email level evidence only)
+    attachment_count = raw.get("AttachmentCount", 0)
+
+    if attachment_count > 0:
+        alert["attachments"] = ["unknown_attachment"]
     else:
         alert["attachments"] = []
-        alert["attachment_hases"] = []
 
-    alert["detection_reason"] = "Suspicious email indicators detected"
-    alert["authentication_results"] = raw.get("authentication_results", "")
-    
-    # alert["vendor_confidence"] = 70
+    alert["attachments_hash"] = []
+
+    # Authentication / spoofing indicators
+    alert["authentication_results"] = raw.get("AuthenticationDetails", {})
+    alert["detection_reason"] = raw.get(
+        "DetectionMethods",
+        "Suspicious email indicators detected"
+    )
+    alert["vendor_confidence"] = raw.get("ConfidenceLevel", "Unknown")
 
     alert["raw_log"] = raw
 
