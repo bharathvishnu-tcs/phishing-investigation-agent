@@ -1,15 +1,17 @@
-{
-  "User": "user1@company.com",
-  "Login1": {
-    "Time": "2026-03-12T08:35:00Z",
-    "Location": "Toronto, Canada",
-    "IP": "99.224.15.10"
-  },
-  "Login2": {
-    "Time": "2026-03-12T08:42:55Z",
-    "Location": "Moscow, Russia",
-    "IP": "45.77.120.33"
-  },
-  "Detection": "Impossible Travel",
-  "RiskLevel": "High"
-}
+[
+  {
+    "User": "user1@company.com",
+    "Login1": {
+      "Time": "2026-03-12T08:35:00Z",
+      "Location": "Toronto, Canada",
+      "IP": "99.224.15.10"
+    },
+    "Login2": {
+      "Time": "2026-03-12T08:42:55Z",
+      "Location": "Moscow, Russia",
+      "IP": "45.77.120.33"
+    },
+    "Detection": "Impossible Travel",
+    "RiskLevel": "High"
+  }
+]

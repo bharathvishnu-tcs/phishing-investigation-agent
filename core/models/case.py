@@ -6,6 +6,8 @@ class CaseState(TypedDict, total=False):
     source: str
     timestamp: str
 
+    log_index: int
+
     # Original email evidence
     email_evidence: Dict
 

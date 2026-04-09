@@ -9,7 +9,7 @@ def ingest_url_click_log(path: str) -> dict:
         return json.load(f)
     
 def add_url_click_evidence(case: dict, log: dict) -> dict:
-    case.setdefault("url_click_evidence", []).append({
+    case.setdefault("url_click_evidence").append({
         "url": log.get("Url"),
         "user": log.get("UserId"),
         "ip_address": log.get("IPAddress"),
@@ -34,7 +34,9 @@ def analyze_url(case:dict) -> dict:
     """ 
     sender_domain = case.get("email_evidence", {}).get("sender_domain", "")
     raw_log = ingest_url_click_log("data/url_click_logs.json")
+    raw_log = raw_log[case.get("log_index")]
 
+    case["url_click_evidence"] = []
     case = add_url_click_evidence(case, raw_log)
 
     for item in case.get("url_click_evidence", []):

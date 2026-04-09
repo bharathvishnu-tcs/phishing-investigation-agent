@@ -59,6 +59,7 @@ RULES = [
 def analyze_endpoint(case):
     with open("data/endpoint_telemetry_logs.json","r") as f:
         raw_log = json.load(f)
+    raw_log = raw_log[case.get("log_index",0)]
     log = normalize_log(raw_log)
 
     score = 0

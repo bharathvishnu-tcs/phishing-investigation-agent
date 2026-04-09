@@ -12,8 +12,5 @@ def home():
 
 @app.post("/investigate")
 def investigate():
-    case = run_pipeline()
-
-    result = format_output(case)
-    print(result)
-    return result
+    cases = run_pipeline()
+    return cases

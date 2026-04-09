@@ -1,29 +1,31 @@
-{
-  "TimeGenerated": "2026-03-12T08:42:55Z",
-  "UserPrincipalName": "user1@company.com",
-  "IPAddress": "45.77.120.33",
-  "Location": "Moscow, Russia",
-  "AppDisplayName": "Office 365",
-  "ClientAppUsed": "Browser",
-  "DeviceDetail": {
-    "OperatingSystem": "Windows 10",
-    "Browser": "Chrome"
-  },
-  "Status": {
-    "ErrorCode": 0,
-    "FailureReason": "None"
-  },
-  "AuthenticationDetails": [
-    {
-      "AuthenticationMethod": "Password",
-      "Succeeded": true
+[  
+  {
+    "TimeGenerated": "2026-03-12T08:42:55Z",
+    "UserPrincipalName": "user1@company.com",
+    "IPAddress": "45.77.120.33",
+    "Location": "Moscow, Russia",
+    "AppDisplayName": "Office 365",
+    "ClientAppUsed": "Browser",
+    "DeviceDetail": {
+      "OperatingSystem": "Windows 10",
+      "Browser": "Chrome"
     },
-    {
-      "AuthenticationMethod": "MFA Push",
-      "Succeeded": true
-    }
-  ],
-  "RiskLevelDuringSignIn": "High",
-  "RiskDetail": "Anonymous IP address",
-  "ConditionalAccessStatus": "success"
-}
+    "Status": {
+      "ErrorCode": 0,
+      "FailureReason": "None"
+    },
+    "AuthenticationDetails": [
+      {
+        "AuthenticationMethod": "Password",
+        "Succeeded": true
+      },
+      {
+        "AuthenticationMethod": "MFA Push",
+        "Succeeded": true
+      }
+    ],
+    "RiskLevelDuringSignIn": "High",
+    "RiskDetail": "Anonymous IP address",
+    "ConditionalAccessStatus": "success"
+  }
+]

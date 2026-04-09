@@ -1,12 +1,14 @@
-{
-  "TimeGenerated": "2026-03-12T08:45:10Z",
-  "UserId": "user1@company.com",
-  "Operation": "New-InboxRule",
-  "RuleName": "ForwardAll",
-  "ForwardTo": "attacker@protonmail.com",
-  "Parameters": {
-    "DeleteMessage": true,
-    "MarkAsRead": true
-  },
-  "ResultStatus": "Success"
-}
+[
+  {
+    "TimeGenerated": "2026-03-12T08:45:10Z",
+    "UserId": "user1@company.com",
+    "Operation": "New-InboxRule",
+    "RuleName": "ForwardAll",
+    "ForwardTo": "attacker@protonmail.com",
+    "Parameters": {
+      "DeleteMessage": true,
+      "MarkAsRead": true
+    },
+    "ResultStatus": "Success"
+  }
+]

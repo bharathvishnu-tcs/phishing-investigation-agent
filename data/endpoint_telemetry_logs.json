@@ -1,9 +1,11 @@
-{
-  "TimeGenerated": "2026-03-12T08:40:55Z",
-  "DeviceName": "WIN-USER01",
-  "ActionType": "BrowserLaunched",
-  "FileName": "chrome.exe",
-  "InitiatingProcessCommandLine": "chrome.exe http://login-microsoftonline-security.com/auth",
-  "AccountName": "user1",
-  "IPAddress": "192.168.1.10"
-}
+[
+  {
+    "TimeGenerated": "2026-03-12T08:40:55Z",
+    "DeviceName": "WIN-USER01",
+    "ActionType": "BrowserLaunched",
+    "FileName": "chrome.exe",
+    "InitiatingProcessCommandLine": "chrome.exe http://login-microsoftonline-security.com/auth",
+    "AccountName": "user1",
+    "IPAddress": "192.168.1.10"
+  }
+]

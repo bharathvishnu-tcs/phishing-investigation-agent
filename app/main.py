@@ -24,13 +24,13 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 def run_pipeline():
     alerts = load_and_normalize("data/email_logs.json")
-    
-    for alert in alerts:
+    cases = []
+    for i,alert in enumerate(alerts):
         print("==Normalized OUTPUT==\n")
         for key, value in alert.items():
             print(f"{key}:{value}")
         print("--XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX---")
-        case = initialize_case(alert)
+        case = initialize_case(alert,i)
         modules = [
             ("header_analysis",analyze_header),
             ("url_analysis",analyze_url),
@@ -61,5 +61,6 @@ def run_pipeline():
         for key,value in case.items():
             print(f"{key} : {value}")
         print("===XXXXXXXXXXXXXXXXXXXXXXX=====")
-        # return case
+        cases.append(case)
+    return cases
 

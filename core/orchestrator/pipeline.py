@@ -2,11 +2,12 @@ import uuid
 from datetime import datetime
 
 
-def initialize_case(alert: dict) -> dict:
+def initialize_case(alert: dict,index :int) -> dict:
     case = {
         
         # Core identifiers  
         "case_id": str(uuid.uuid4()),
+        "log_index": index,
         "source": alert.get("source_system"),
         "timestamp": datetime.utcnow().isoformat(),
 

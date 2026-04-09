@@ -1,4 +1,5 @@
-{
+[
+  {
   "TimeGenerated": "2026-03-12T08:47:33Z",
   "UserId": "user1@company.com",
   "Operation": "FileDownloaded",
@@ -6,4 +7,5 @@
   "Site": "https://company.sharepoint.com/sites/finance",
   "ClientIP": "45.77.120.33",
   "Location": "Moscow, Russia"
-}
+  }
+]

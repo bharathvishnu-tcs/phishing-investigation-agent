@@ -18,9 +18,10 @@ def time_diff_hours(t1, t2):
 def analyze_identity(case):
     with open("data/impossible_travel_logs.json") as f:
         logs = json.load(f)
+    logs = logs[case.get("log_index")]
     with open("data/sign_in_logs.json") as f:
         logss = json.load(f)
-
+    logss = logss[case.get("log_index")]
     identity = {
         "credentials_submitted": False,
         # "multiple_failed_logins": False,
