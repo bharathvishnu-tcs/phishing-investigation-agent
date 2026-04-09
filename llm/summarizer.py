@@ -1,46 +1,38 @@
+import json
 from llm.ollama_client import query_ollama
 
+
 def generate_summary(case):
-    prompt =f"""
-        You are a SOC Analyst
 
-        Analyze the following phishing case:
-            Classification: {case['decision']['classification']}
-            URL Analysis: {case['url_click_evidence']}
-            Header Analysis: {case['header_analysis']}
-            Spoofing Logs: {case['spoofing']}
-            Identity Logs: {case['sign_in_evidence']}
-            Attachment Analysis: {case['attachment_evidence']}
-            Endpoint Analysis: {case['endpoint_evidence']}
-            User Interaction with mail: {case['url_click_evidence']}
-            Risk: {case['risk']}
+    context = {
+        "email": case.get("email_evidence", {}),
+        "attack_chain": case.get("decision", {}).get("attack_chain", []),
+        "attack_stage": case.get("decision", {}).get("attack_stage", ""),
+        "risk": case.get("risk", {}),
+        "ioc": case.get("iocs", {}),
+    }
 
-        Provide a clear technical summary with limited to 6-8 bullet points.
-        Only describe facts present in data.
-        Do not exaggerate or assume.
-
-    """
-
-    summary = query_ollama(prompt)
-
-    case['summary'] = summary
-
-    return case
-
-def generate_summary2(case):
-    
     prompt = f"""
-    Summarize this security incident for a non-technical executive.
+            You are a SOC analyst.
 
-    Classification: {case['decision']['classification']}
-    Severity: {case['decision']['severity']}
-    Risk: {case['risk']}
-    
-    Keep it simple and clear.
-    """
-    
-    exec_summary = query_ollama(prompt)
-    
-    case["summary2"] = exec_summary
-    
-    return case
+            Summarize the following phishing investigation in 3-4 concise sentences.
+
+            Focus on:
+            - What happened
+            - What the user did
+            - What the attacker achieved
+            - Risk level
+
+            Data:
+            {json.dumps(context, indent=2)}
+
+            Return only plain text summary.
+            """
+
+    try:
+        response = query_ollama(prompt)
+        case["summary"] = response.strip()
+        return case
+    except Exception as e:
+        print(f"Summary generation failed: {e}")
+        return "Summary not available."

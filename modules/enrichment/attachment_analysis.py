@@ -1,19 +1,17 @@
 from app.config import *
 def analyze_attachments(case):
     
-    attachments = case.get("attachments", [])
-    hashes = case.get("attachments_hashes", [])
-    
+    attachments = case.get("email_evidence").get("attachments")
+    hashes = case.get("email_evidence").get("attachment_hashes")
     results = []
     
-    for i, file in enumerate(attachments):
-        
+    for i in range(len(attachments)):
         file_hash = hashes[i] if i < len(hashes) else None
         
         score = 0
         reasons = []
 
-        file_name = file.lower()
+        file_name = attachments[i].lower()
         
         if file_name.endswith((".exe", ".js", ".bat", ".vbs", ".scr", ".ps1")):
             score += ATTACH_EXECUTABLE_SCORE

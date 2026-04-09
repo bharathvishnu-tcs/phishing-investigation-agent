@@ -30,7 +30,7 @@ def analyze_user_interaction(case: dict) -> dict:
     for att in attachments:
         if att.get("action_type") in ["FileOpened", "FileExecuted", "FileDownloaded"]:
             interaction["attachment_opened"] = True
-            interaction["opened_attachments"].append(att.get("FileName"))
+            interaction["opened_attachments"].append(att.get(""))
 
-    case["user_interaction"] = interaction
+    case["user_interaction_evidence"] = interaction
     return case

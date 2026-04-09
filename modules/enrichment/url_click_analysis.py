@@ -41,6 +41,7 @@ def analyze_url(case:dict) -> dict:
         url = item.get("url")
         domain = extract_domain(url)
         keywords = find_suspicious_keywords(url)
+        #needs to be changed 
         domain_age = simulate_domain_age(domain)
 
         score = 0

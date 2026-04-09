@@ -2,9 +2,6 @@
 import sys
 import os
 import logging
-logging.basicConfig(level = logging.INFO)
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from modules.parser import load_and_normalize
 from modules.enrichment.header_analysis import analyze_header
 from core.orchestrator.pipeline import initialize_case
@@ -19,17 +16,20 @@ from modules.ioc.collect_ioc import collect_ioc
 from modules.ioc.ioc_sweep import ioc_sweep
 from modules.decision.respond import respond
 from modules.risk.risk_engine import calculate_risk
-from llm.analyzer import generate_reasoning
-from llm.summarizer import generate_summary, generate_summary2
+from llm.summarizer import generate_summary
+
+#mapping this to be the main folder
+logging.basicConfig(level = logging.INFO)
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 def run_pipeline():
     alerts = load_and_normalize("data/email_logs.json")
     
     for alert in alerts:
-        # print("==Normalized OUTPUT==\n")
-        # for key, value in alert.items():
-        #     print(f"{key}:{value}")
-    
+        print("==Normalized OUTPUT==\n")
+        for key, value in alert.items():
+            print(f"{key}:{value}")
+        print("--XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX---")
         case = initialize_case(alert)
         modules = [
             ("header_analysis",analyze_header),
@@ -41,22 +41,25 @@ def run_pipeline():
             ("endpoint",analyze_endpoint),
             ("ioc_collection",collect_ioc),
             ("ioc_sweep",ioc_sweep),
-            ("risk",calculate_risk),
             ("classification",classify),
-            ("response",respond)
+            ("risk",calculate_risk),
+            ("response",respond),
+            ("summary",generate_summary)
         ]
 
         for name,module in modules:
-            # try:
-            #     logging.info(f"Running {name}")
-            #     case = module(case)
-            # except Exception as e:
-            #     logging.error(f"{name} failed : {e}")
+            try:
+                logging.info(f"Running {name}")
+                case = module(case)
+            except Exception as e:
+                logging.error(f"{name} failed : {e}")
             case = module(case)
         
-        # case = generate_summary(case)
-        # case = generate_summary2(case)
-        # case = generate_reasoning(case)
-        print(case)
-        return case
+
+        
+        print("===CASE OUTPUT===")
+        for key,value in case.items():
+            print(f"{key} : {value}")
+        print("===XXXXXXXXXXXXXXXXXXXXXXX=====")
+        # return case
 

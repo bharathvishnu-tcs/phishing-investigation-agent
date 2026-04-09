@@ -1,94 +1,83 @@
 def respond(case):
+
     decision = case.get("decision", {})
-    classification = decision.get("classification", "")
+    risk = case.get("risk", {})
 
-    RESPONSE_PLAYBOOK = {
+    attack_chain = decision.get("attack_chain", [])
+    attack_stage = decision.get("attack_stage", "")
+    risk_level = risk.get("level", "Low")
 
-        # ===== CRITICAL =====
-        "Credential Harvesting (Account Compromise)": [
-            "Delete email from all mailboxes",
-            "Block sender domain",
-            "Block malicious URLs",
-            "Force password reset for user",
+    actions = []
+
+  
+    if "Data Exfiltration" in attack_chain:
+        actions = [
+            "Isolate affected user account",
+            "Block attacker IP and domains",
+            "Revoke all active sessions",
+            "Force password reset",
+            "Remove malicious mailbox rules",
+            "Audit accessed/downloaded data",
+            "Notify security team and management"
+        ]
+
+    elif "Persistence" in attack_chain:
+        actions = [
+            "Remove malicious mailbox rules",
+            "Revoke active sessions",
+            "Force password reset",
+            "Block attacker infrastructure",
+            "Monitor account for further suspicious activity"
+        ]
+
+    elif "Credential Theft" in attack_chain:
+        actions = [
+            "Force password reset",
             "Revoke active sessions",
             "Enable/Enforce MFA",
-            "Check for lateral movement",
-            "Monitor identity and login logs"
-        ],
+            "Monitor login activity",
+            "Check for suspicious access patterns"
+        ]
 
-        "Account Takeover Attempt After Phishing": [
+
+
+    elif "User Interaction" in attack_chain:
+        actions = [
             "Delete email from all mailboxes",
             "Block sender domain",
-            "Force password reset for user",
-            "Monitor failed login sources",
-            "Enable/Enforce MFA",
-            "Investigate login IP addresses"
-        ],
-
-        # ===== HIGH =====
-        "Malware Execution via Phishing Attachment": [
-            "Delete email from all mailboxes",
-            "Block sender domain",
-            "Isolate affected endpoint",
-            "Run full antivirus/EDR scan",
-            "Collect process execution logs",
-            "Block attachment hash across environment"
-        ],
-
-        "User Clicked Malicious Phishing Link": [
-            "Delete email from all mailboxes",
-            "Block sender domain",
-            "Block malicious URLs at proxy/firewall",
-            "Monitor user browser and login activity"
-        ],
-
-        # ===== MEDIUM =====
-        "Malware Delivery Attempt (Attachment Not Opened)": [
-            "Delete email from all mailboxes",
-            "Block sender domain",
-            "Block attachment hash",
-            "Warn user not to open attachment"
-        ],
-
-        "Phishing Link Clicked (No Known Malicious Verdict Yet)": [
-            "Delete email from all mailboxes",
-            "Block sender domain",
-            "Investigate URL reputation",
-            "Monitor user activity for 24 hours"
-        ],
-
-        "Spoofed Sender Phishing Attempt": [
-            "Delete email from all mailboxes",
-            "Block sender domain",
-            "Review mail gateway spoof protection rules"
-        ],
-
-        "New Domain Phishing Lure": [
-            "Delete email from all mailboxes",
-            "Block sender domain",
-            "Add domain to watchlist"
-        ],
-
-        "Malicious URL Detected (No Interaction)": [
-            "Delete email from all mailboxes",
             "Block malicious URLs",
-            "Block sender domain"
-        ],
+            "Monitor user activity",
+            "Warn user about phishing attempt"
+        ]
 
-        # ===== LOW =====
-        "Suspicious Email Indicators": [
+
+
+    elif attack_stage == "Initial Access":
+        actions = [
             "Delete email from all mailboxes",
-            "Mark sender as suspicious for monitoring"
-        ],
-    }
+            "Block sender domain",
+            "Add domain to watchlist",
+            "Review email security filters"
+        ]
 
-    # Default safe response
-    default_actions = [
-        "Delete email from all mailboxes",
-        "Block sender domain"
-    ]
 
-    actions = RESPONSE_PLAYBOOK.get(classification, default_actions)
+
+    else:
+        actions = [
+            "Delete email from all mailboxes",
+            "Block sender domain"
+        ]
+
+
+
+    if risk_level == "Critical":
+        actions.append("Escalate incident to Tier 2/3 SOC")
+        actions.append("Trigger automated SOAR playbook")
+
+    elif risk_level == "High":
+        actions.append("Escalate for analyst review")
+
 
     case["response"] = actions
+
     return case

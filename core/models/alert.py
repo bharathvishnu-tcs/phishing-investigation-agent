@@ -23,7 +23,7 @@ class NormalizedAlert(TypedDict, total=False):
 
     urls: Optional[List[str]]
     attachments: Optional[List[str]]
-    attachments_hashes: Optional[List[str]]
+    attachment_hashes: Optional[List[str]]
 
     device_id: Optional[str]
     hostname: Optional[str]

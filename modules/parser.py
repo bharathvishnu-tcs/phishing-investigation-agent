@@ -45,11 +45,11 @@ def normalize(raw:dict) -> NormalizedAlert:
     attachment_count = raw.get("AttachmentCount", 0)
 
     if attachment_count > 0:
-        alert["attachments"] = ["unknown_attachment"]
+        alert["attachments"] = raw.get("AttachmentName")
     else:
         alert["attachments"] = []
 
-    alert["attachments_hash"] = []
+    alert["attachment_hashes"] = raw.get("AttachmentHashes")
 
     # Authentication / spoofing indicators
     alert["authentication_results"] = raw.get("AuthenticationDetails", {})

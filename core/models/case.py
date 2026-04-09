@@ -15,6 +15,7 @@ class CaseState(TypedDict, total=False):
     # User attachment interaction evidence
     attachment_evidence: List[Dict]
 
+    spoofing_evidence: List[Dict]
     # Endpoint/browser/process evidence
     endpoint_evidence: List[Dict]
 
@@ -53,10 +54,10 @@ class CaseState(TypedDict, total=False):
 
     # LLM outputs
     summary: str
-    llm_reasoning: str
+   
 
     # Raw log backup (optional reference)
-    raw_log: Dict
+    # raw_log: Dict
 
 
 

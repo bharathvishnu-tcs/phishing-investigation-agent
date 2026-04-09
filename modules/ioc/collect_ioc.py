@@ -59,5 +59,5 @@ def collect_ioc(case: dict) -> dict:
 
     # Convert sets to lists for JSON serialization
     case["iocs"] = {k: list(v) for k, v in iocs.items()}
-    print("Collected IOCs:", case["iocs"])
+  
     return case

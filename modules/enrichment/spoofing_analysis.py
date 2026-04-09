@@ -12,6 +12,7 @@ def analyze_spoofing(case):
     spoof_score = 0
     reasons = []
 
+    #need to be added or changed accordingly
     legit_domains = ["paypal.com", "microsoft.com", "google.com"]
 
     if sender_domain:
@@ -38,7 +39,7 @@ def analyze_spoofing(case):
         spoof_score += 2
         reasons.append("DMARC failure increases spoof likelihood")
 
-    case["spoofing"] = {
+    case["spoofing_analysis"] = {
         "spoof_score": spoof_score,
         "is_spoofed": spoof_score >= 3,
         "reasons": reasons

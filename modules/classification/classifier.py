@@ -1,19 +1,24 @@
+from llm.classifier import llm_classify
+
+
 def classify(case):
 
-
+    # =========================
+    # EXTRACT DATA
+    # =========================
     email = case.get("email_evidence", {})
     url_clicks = case.get("url_click_evidence", [])
     attachments = case.get("attachment_evidence", [])
     endpoint = case.get("endpoint_evidence", {})
     signins = case.get("sign_in_evidence", {})
-    
-    spoofed = case.get("spoofing", {}).get("is_spoofed", False)
+
+    spoofed = case.get("spoofing_evidence", {}).get("is_spoofed", False)
     header_suspicious = case.get("header_analysis", {}).get("is_suspicious", False)
 
     malicious_url = any(u.get("analysis", {}).get("is_malicious") for u in url_clicks)
     link_clicked = any(u.get("clicked_through") for u in url_clicks)
 
-    malicious_attachment = any(a.get("analysis", {}).get("is_malicious") for a in attachments)
+    malicious_attachment = any(a.get("is_malicious") for a in attachments)
     attachment_opened = any(a.get("opened") for a in attachments)
 
     creds = signins.get("credentials_submitted", False)
@@ -26,69 +31,92 @@ def classify(case):
 
     email_delivered = case.get("user_interaction", {}).get("email_delivered", False)
 
-
-    # =========================
+    
     stages = {
         "delivery": email_delivered,
         "interaction": link_clicked or attachment_opened,
         "execution": endpoint_suspicious,
         "credential_access": creds,
-        "persistence": persistence,
         "lateral_movement": impossible_travel,
+        "persistence": persistence,
         "exfiltration": data_exfiltration
     }
 
- 
-    if stages["credential_access"] and stages["interaction"]:
-        classification = "Confirmed Phishing → Credential Compromise"
-        severity = "critical"
+    attack_chain = []
 
-    elif stages["exfiltration"]:
-        classification = "Data Exfiltration Detected"
-        severity = "critical"
+    if stages["delivery"]:
+        attack_chain.append("Initial Access")
 
-    elif stages["persistence"]:
-        classification = "Post-Compromise Persistence Established"
-        severity = "critical"
+    if stages["interaction"]:
+        attack_chain.append("User Interaction")
 
-    elif stages["lateral_movement"]:
-        classification = "Account Takeover / Suspicious Login Activity"
-        severity = "high"
+    if stages["execution"]:
+        attack_chain.append("Execution")
 
-    # ===== HIGH =====
-    elif stages["interaction"] and malicious_url:
-        classification = "User Clicked Verified Malicious Phishing Link"
-        severity = "high"
+    if stages["credential_access"]:
+        attack_chain.append("Credential Theft")
 
-    elif stages["execution"] and malicious_attachment:
-        classification = "Malware Execution via Attachment"
-        severity = "high"
+    if stages["lateral_movement"]:
+        attack_chain.append("Account Takeover")
 
-    # ===== MEDIUM =====
-    elif malicious_url:
-        classification = "Malicious Phishing Link Delivered"
-        severity = "medium"
+    if stages["persistence"]:
+        attack_chain.append("Persistence")
 
-    elif malicious_attachment:
-        classification = "Malicious Attachment Delivered"
-        severity = "medium"
+    if stages["exfiltration"]:
+        attack_chain.append("Data Exfiltration")
+
+    
+    if stages["credential_access"] or stages["persistence"] or stages["exfiltration"]:
+        classification = "Phishing"
+        attack_stage = "Post-Compromise"
+
+    elif stages["interaction"]:
+        classification = "Attempted Phishing"
+        attack_stage = "User Interaction"
 
     elif spoofed or header_suspicious:
-        classification = "Spoofed / Suspicious Email"
-        severity = "medium"
+        classification = "Suspicious"
+        attack_stage = "Initial Access"
 
-    # ===== LOW =====
     else:
-        classification = "Suspicious / Low Confidence Phishing"
-        severity = "low"
+        classification = "Legitimate"
+        attack_stage = "Initial Access"
 
-    reasons = [k for k, v in stages.items() if v]
+
+    context = {
+        "email": email,
+        "url_activity": url_clicks,
+        "identity": signins,
+        "endpoint": endpoint,
+        "ioc_sweep": case.get("ioc_sweep", {}),
+        "flags": stages
+    }
+
+    llm_result = llm_classify(context)
+
+    confidence = 0.6  # fallback default
+    reasoning = ["Rule-based classification used"]
+
+
+    if llm_result and llm_result.get("confidence", 0) >= 0.7:
+
+        classification = llm_result.get("classification", classification)
+        attack_stage = llm_result.get("attack_stage", attack_stage)
+        confidence = llm_result.get("confidence", confidence)
+        reasoning = llm_result.get("reasoning", [])
+
+        llm_chain = llm_result.get("attack_chain", [])
+        attack_chain = list(set(attack_chain + llm_chain))
+
 
     case["decision"] = {
         "classification": classification,
-        "severity": severity,
+        "attack_stage": attack_stage,
+        "attack_chain": attack_chain,
         "attack_stages": stages,
-        "reasons": reasons
+        "confidence": round(confidence, 2),
+        "reasons": [k for k, v in stages.items() if v],
+        "llm_reasoning": reasoning
     }
 
     return case

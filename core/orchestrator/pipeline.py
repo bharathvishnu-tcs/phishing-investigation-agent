@@ -22,8 +22,10 @@ def initialize_case(alert: dict) -> dict:
             "detection_reason": alert.get("detection_reason"),
             "message_id": alert.get("message_id"),
             "delivery_action": alert.get("delivery_action"),
+            "attachments": alert.get("attachments"),
+            "attachment_hashes": alert.get("attachment_hashes"),
         },
-
+        "header_analysis": [],
         "url_click_evidence": [],
         "attachment_evidence": [],
         "endpoint_evidence": [],
@@ -65,7 +67,7 @@ def initialize_case(alert: dict) -> dict:
         "llm_reasoning": "",
 
         # Backup raw log
-        "raw_log": alert.get("raw_log", {}),
+        # "raw_log": alert.get("raw_log", {}),
     }
 
     return case

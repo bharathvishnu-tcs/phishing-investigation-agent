@@ -7,7 +7,7 @@
     "RecipientEmailAddress": "user1@company.com",
     "Subject": "[URGENT] Password Expiry Notification",
     "DeliveryAction": "Delivered",
-    "ThreatTypes": "Phish",
+    "ThreatTypes": "Phishing",
     "DetectionMethods": "URL reputation, Domain impersonation",
     "AuthenticationDetails": {
       "SPF": "Fail",
@@ -15,7 +15,9 @@
       "DMARC": "Fail"
     },
     "UrlCount": 1,
-    "AttachmentCount": 0,
+    "AttachmentCount": 1, 
+    "AttachmentName":["abc.exe","xyz.txt"],
+    "AttachmentHashes":["abc123","xyz456"], 
     "ConfidenceLevel": "High"
   }
 ]
