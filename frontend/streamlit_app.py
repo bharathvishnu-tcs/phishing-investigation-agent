@@ -18,7 +18,7 @@ body {
     border: 1px solid #30363d;
 }
 .metric-box {
-    background-color: #0d1117;
+    background-color: #1A1F26;
     padding: 12px;
     border-radius: 10px;
     text-align: center;
@@ -59,7 +59,76 @@ for case in cases:
         st.markdown(f"**Title:** {case.get('alert_title','Suspicious Email Detected')}")
 
         # -------- SUMMARY (LLM) --------
-        st.markdown(f"**Summary:** {case.get('llm_summary','No summary available')}")
+        st.markdown(f"**Summary:** {case.get('summary','No summary available')}")
+
+        col1, col2 = st.columns(2)
+
+        # Basic Details Table (Table 1)
+        with col1:
+            st.markdown("**Email Details**")
+            email = case.get("email_evidence", {})
+            
+            basic_details = {
+                "Sender Email": email.get("sender_email", "N/A"),
+                "Recipient Email(s)": ", ".join(email.get("recipient_emails", ["N/A"])),
+                "Subject": email.get("subject", "N/A"),
+                "urls": "",
+                "Attachments": ""
+            }
+
+            urls = case.get("url_click_evidence", [])
+            for url in urls:
+                basic_details["urls"] += url.get("url", "") + ", "
+            attachments = case.get("attachment_evidence", [])
+            for attachment in attachments:
+                basic_details["Attachments"] += attachment.get("filename", "") + ", "
+            
+            # Display basic details in table format
+            st.table(basic_details)
+
+        # User Interaction Details Table (Table 2)
+        with col2:
+            st.markdown("**User Interaction Details**")
+
+            interaction_data = []
+
+            user_interaction = case.get("user_interaction_evidence", {})
+
+            email_delivered = user_interaction.get("email_delivered", "N/A")
+            link_clicked = user_interaction.get("link_clicked", "N/A")
+            attachment_opened = user_interaction.get("attachment_opened", "N/A")
+            clicked_urls = user_interaction.get("clicked_urls", [])
+            opened_attachments = user_interaction.get("opened_attachments", [])
+
+            # Adding rows for user interaction
+            interaction_data.append({
+                "Action": "Email Delivered",
+                "Status": email_delivered
+            })
+            interaction_data.append({
+                "Action": "Link Clicked",
+                "Status": link_clicked
+            })
+            if link_clicked:
+                for url in clicked_urls:
+                    for url in clicked_urls:
+                        interaction_data.append({
+                            "Action": "Clicked URL",
+                            "Status": True if url else False
+                        })
+            interaction_data.append({
+                "Action": "Attachment Opened",
+                "Status": attachment_opened
+            })
+            if attachment_opened:
+                for attachment in opened_attachments:
+                    interaction_data.append({
+                        "Action": "Opened Attachment",
+                        "Status": attachment
+                    })
+
+            # Displaying the table
+            st.table(interaction_data)
 
         # -------- METRICS --------
         c1, c2, c3, c4 = st.columns(4)
