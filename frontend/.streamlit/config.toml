@@ -1,0 +1,4 @@
+[server]
+# Enables or disables the file watcher that triggers a rerun when the source code changes.
+# Default: true
+watchdog = true
